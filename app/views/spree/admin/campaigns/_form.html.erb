@@ -1,0 +1,17 @@
+<%= render 'spree/shared/error_messages', :target => @campaign %>
+
+<fieldset id="general_fields">
+  <legend><%= t(:general) %></legend>
+  <%= f.field_container(:name) do %>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  <% end %>
+  <%= f.field_container(:number_of_coupons) do %>
+    <%= f.label :number_of_coupons %><br />
+    <%= f.text_field :number_of_coupons %>
+  <% end %>
+  <%= f.field_container(:value) do %>
+    <%= f.label :value %><br />
+    <%= f.text_field :value %>
+  <% end %>
+</fieldset>

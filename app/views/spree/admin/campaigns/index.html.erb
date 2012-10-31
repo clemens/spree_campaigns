@@ -1,0 +1,36 @@
+<div class="toolbar">
+  <ul class="actions">
+    <li>
+      <%= button_link_to t(:new_campaign), spree.new_admin_campaign_path, :icon => 'add' %>
+    </li>
+  </ul>
+  <br class="clear" />
+</div>
+
+<h1><%= t(:campaigns) %></h1>
+
+<table class="index">
+  <thead>
+    <tr>
+      <th><%= t(:name) %></th>
+      <th><%= t(:value) %></th>
+      <th><%= t(:number_of_coupons) %></th>
+      <th><%= t(:usage) %></th>
+      <th style="width:150px;"><%= t(:action) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- @campaigns.each do |campaign| -%>
+      <tr id="<%= spree_dom_id(campaign) %>">
+        <td><%= campaign.name %></td>
+        <td><%= money(campaign.value) %></td>
+        <td><%= campaign.number_of_coupons %></td>
+        <td><%= campaign.coupons_available %> / <%= campaign.coupons_total %> available</td>
+        <td>
+          <%= link_to 'Download CSV', admin_campaign_path(campaign, :csv) %>
+          <%= link_to_delete(campaign) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
