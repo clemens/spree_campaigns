@@ -49,6 +49,8 @@ module Spree
           :usage_limit => 1,
           :event_name => 'spree.checkout.coupon_code_added',
           :code => Devise.friendly_token.first(10).upcase,
+          :starts_at => starts_at,
+          :expires_at => ends_at,
         )
         Spree::Promotion::Rules::ItemTotal.create!(:preferred_operator => 'gte', :preferred_amount => value) do |rule|
           rule.promotion = promotion

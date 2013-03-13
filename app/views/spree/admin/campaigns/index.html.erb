@@ -16,6 +16,7 @@
       <th><%= t(:value) %></th>
       <th><%= t(:number_of_coupons) %></th>
       <th><%= t(:usage) %></th>
+      <th><%= t(:campaign_period) %></th>
       <th style="width:150px;"><%= t(:action) %></th>
     </tr>
   </thead>
@@ -26,6 +27,10 @@
         <td><%= money(campaign.value) %></td>
         <td><%= campaign.number_of_coupons %></td>
         <td><%= campaign.coupons_available %> / <%= campaign.coupons_total %> available</td>
+        <td>
+          Start: <%= campaign.starts_at.present? ? l(campaign.starts_at, :format => :short) : 'n/a' %>,
+          End: <%= campaign.ends_at.present? ? l(campaign.ends_at, :format => :short) : 'n/a' %>
+        </td>
         <td>
           <%= link_to 'Download CSV', admin_campaign_path(campaign, :csv) %>
           <%= link_to_delete(campaign) %>

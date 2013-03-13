@@ -14,4 +14,14 @@
     <%= f.label :value %><br />
     <%= f.text_field :value %>
   <% end %>
+
+  <legend><%= t(:campaign_period) %></legend>
+  <%= f.field_container(:starts_at) do %>
+    <%= f.label :starts_at %><br />
+    <%= f.text_field :starts_at, :class => 'datepicker' %>
+  <% end %>
+  <%= f.field_container(:ends_at) do %>
+    <%= f.label :ends_at %><br />
+    <%= f.text_field :ends_at, :class => 'datepicker' %>
+  <% end %>
 </fieldset>
