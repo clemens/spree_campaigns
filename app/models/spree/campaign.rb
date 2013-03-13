@@ -12,7 +12,17 @@ module Spree
     after_create :create_promotions
 
     def coupons_available
-      promotions.reject(&:usage_limit_exceeded?).count
+      # OPTIMIZE: At least the inner sub query could probably be rewritten with a JOIN.
+      conditions = <<-sql
+        usage_limit IS NULL OR
+        usage_limit > (
+          SELECT COUNT(*) FROM #{Spree::Adjustment.table_name} sa
+	        WHERE sa.originator_type = 'Spree::PromotionAction' AND sa.originator_id IN (
+	          SELECT id FROM #{Spree::PromotionAction.table_name} spa WHERE spa.activator_id = #{Spree::Promotion.table_name}.id
+	        )
+        )
+      sql
+      promotions.where(conditions).count
     end
 
     def coupons_total
