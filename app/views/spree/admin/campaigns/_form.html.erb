@@ -1,27 +1,31 @@
 <%= render 'spree/shared/error_messages', :target => @campaign %>
 
 <fieldset id="general_fields">
+  <p>Note: Name, number of coupons and value cannot be changed after a campaign has been created.</p>
+
+  <%- options = { :disabled => !@campaign.new_record? } -%>
   <legend><%= t(:general) %></legend>
   <%= f.field_container(:name) do %>
     <%= f.label :name %><br />
-    <%= f.text_field :name %>
+    <%= f.text_field :name, options %>
   <% end %>
   <%= f.field_container(:number_of_coupons) do %>
     <%= f.label :number_of_coupons %><br />
-    <%= f.text_field :number_of_coupons %>
+    <%= f.text_field :number_of_coupons, options %>
   <% end %>
   <%= f.field_container(:value) do %>
     <%= f.label :value %><br />
-    <%= f.text_field :value %>
+    <%= f.text_field :value, options %>
   <% end %>
 
+  <%- date_format = '%Y/%m/%d' # would love to use I18n.t(:format, :scope => 'spree.date_picker', :default => 'yy/mm/dd'), but it only works for JS -%>
   <legend><%= t(:campaign_period) %></legend>
   <%= f.field_container(:starts_at) do %>
     <%= f.label :starts_at %><br />
-    <%= f.text_field :starts_at, :class => 'datepicker' %>
+    <%= f.text_field :starts_at, :class => 'datepicker', :value => @campaign.starts_at.present? ? @campaign.starts_at.strftime(date_format) : nil %>
   <% end %>
   <%= f.field_container(:ends_at) do %>
     <%= f.label :ends_at %><br />
-    <%= f.text_field :ends_at, :class => 'datepicker' %>
+    <%= f.text_field :ends_at, :class => 'datepicker', :value => @campaign.ends_at.present? ? @campaign.ends_at.strftime(date_format) : nil %>
   <% end %>
 </fieldset>

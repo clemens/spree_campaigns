@@ -10,6 +10,7 @@ module Spree
     has_many :promotions
 
     after_create :create_promotions
+    after_update :update_promotions
 
     def coupons_available
       # OPTIMIZE: At least the inner sub query could probably be rewritten with a JOIN.
@@ -60,6 +61,10 @@ module Spree
           action.calculator = Spree::Calculator::FlatRate.new(:preferred_amount => value)
         end
       end
+    end
+
+    def update_promotions
+      promotions.update_all(:starts_at => starts_at, :expires_at => ends_at)
     end
 
   end
