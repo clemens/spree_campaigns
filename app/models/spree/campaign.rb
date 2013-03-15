@@ -9,8 +9,12 @@ module Spree
   class Campaign < ActiveRecord::Base
     has_many :promotions
 
+    validates :days, :numericality => { :only_integer => true, :greater_than => 0, :allow_blank => true }, :if => :period_mode_days?
+
     after_create :create_promotions
     after_update :update_promotions
+
+    before_validation :calculate_ends_at_for_days
 
     def coupons_available
       # OPTIMIZE: At least the inner sub query could probably be rewritten with a JOIN.
@@ -42,6 +46,14 @@ module Spree
     end
 
   private
+
+    def period_mode_days?; period_mode == 'days'; end
+    def period_mode_fixed_date?; period_mode == 'fixed_date'; end
+
+    def calculate_ends_at_for_days
+      return unless period_mode_days? && days.present?
+      self.ends_at = starts_at + (days.to_i).days
+    end
 
     def create_promotions
       number_of_coupons.to_i.times do |i|

@@ -24,8 +24,44 @@
     <%= f.label :starts_at %><br />
     <%= f.text_field :starts_at, :class => 'datepicker', :value => @campaign.starts_at.present? ? @campaign.starts_at.strftime(date_format) : nil %>
   <% end %>
-  <%= f.field_container(:ends_at) do %>
-    <%= f.label :ends_at %><br />
-    <%= f.text_field :ends_at, :class => 'datepicker', :value => @campaign.ends_at.present? ? @campaign.ends_at.strftime(date_format) : nil %>
-  <% end %>
+
+  <%= f.field_container(:period_mode) do %>
+    <%= f.label :period_mode %>
+
+    <label>
+      <%= f.radio_button :period_mode, 'days' %> days
+    </label>
+
+    <label>
+      <%= f.radio_button :period_mode, 'fixed_date' %> fixed date
+    </label>
+  <%- end -%>
+
+  <div id="fields_for_days" class="fields_for_period_mode" style="display:none;">
+    <%= f.field_container(:days) do %>
+      <%= f.label :days %><br />
+      <%= f.text_field :days %>
+    <% end %>
+  </div>
+  <div id="fields_for_fixed_date" class="fields_for_period_mode" style="display:none;">
+    <%= f.field_container(:ends_at) do %>
+      <%= f.label :ends_at %><br />
+      <%= f.text_field :ends_at, :class => 'datepicker', :value => @campaign.ends_at.present? ? @campaign.ends_at.strftime(date_format) : nil %>
+    <% end %>
+  </div>
 </fieldset>
+
+<%= javascript_tag do %>
+  jQuery(function($) {
+    var campaignPeriodModeFieldSelector = "input[name='campaign[period_mode]']";
+
+    var toggleFieldsForSelectedPeriodMode = function() {
+      var selectedPeriodMode = $(campaignPeriodModeFieldSelector + ':checked').val();
+      $('.fields_for_period_mode').hide();
+      $('#fields_for_' + selectedPeriodMode).show();
+    };
+    toggleFieldsForSelectedPeriodMode(); // toggle fields for selected mode on page load
+
+    $(campaignPeriodModeFieldSelector).on('change', toggleFieldsForSelectedPeriodMode); // ... and when the radio buttons are changed
+  });
+<% end %>
