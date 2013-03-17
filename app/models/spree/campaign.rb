@@ -9,7 +9,10 @@ module Spree
   class Campaign < ActiveRecord::Base
     has_many :promotions
 
-    validates :days, :numericality => { :only_integer => true, :greater_than => 0, :allow_blank => true }, :if => :period_mode_days?
+    with_options(:if => :period_mode_days?) do |v|
+      v.validates :days, :numericality => { :only_integer => true, :greater_than => 0, :allow_blank => true }
+      v.validates_presence_of :starts_at, :message => 'must be given if period mode is "days"'
+    end
 
     after_create :create_promotions
     after_update :update_promotions
@@ -51,7 +54,7 @@ module Spree
     def period_mode_fixed_date?; period_mode == 'fixed_date'; end
 
     def calculate_ends_at_for_days
-      return unless period_mode_days? && days.present?
+      return unless period_mode_days? && days.present? && starts_at.present?
       self.ends_at = starts_at + (days.to_i).days
     end
 
