@@ -5,6 +5,7 @@ else
   require 'csv'
 end
 
+# Note: This could/should somehow integrate with Spree's own PromotionRule/PromotionAction system.
 module Spree
   class Campaign < ActiveRecord::Base
     has_many :promotions
@@ -68,9 +69,6 @@ module Spree
           :starts_at => starts_at,
           :expires_at => ends_at,
         )
-        Spree::Promotion::Rules::ItemTotal.create!(:preferred_operator => 'gte', :preferred_amount => value) do |rule|
-          rule.promotion = promotion
-        end
         Spree::Promotion::Actions::CreateAdjustment.create! do |action|
           action.promotion = promotion
           action.calculator = Spree::Calculator::FlatRate.new(:preferred_amount => value)
